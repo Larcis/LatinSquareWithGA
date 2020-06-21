@@ -1,0 +1,13 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+canvas {
+    width: 70%;
+    border: 2px solid;
+    position: absolute;
+    z-index: 8;
+}
+
