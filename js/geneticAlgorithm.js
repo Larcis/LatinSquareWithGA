@@ -1,3 +1,5 @@
+importScripts('individual.js');
+
 function GeneticAlgorithm(props) {
     this.mutation_probability = props.mutation_probability; //olusan cocugun mutasyon gecırme olasılıgı 0-1 aralıgında
     this.timeout = props.timeout || 999999; //algoritmanın maksimum calısabılecegı sure ms cinsinden
@@ -51,7 +53,7 @@ function GeneticAlgorithm(props) {
             }
             //natural selection şart yoksa algoritma ilerlemiyor.
             //cocuk, anne veya babadan en ıyı fıtnessa sahıp olanı yenı nesıle ekle
-            let fx = x.calcScore();
+            /*let fx = x.calcScore();
             let fy = y.calcScore();
             let fc = child.calcScore();
             if (fc >= fx && fc >= fy) {
@@ -60,9 +62,10 @@ function GeneticAlgorithm(props) {
                 new_population.push(x);
             } else {
                 new_population.push(y);
-            }
+            }*/
+            new_population.push(child);
         }
-        console.assert(this.population.length === new_population.length, { error: "population size changed" });
+        //console.assert(this.population.length === new_population.length, { error: "population size changed" });
         this.population = new_population; //o ankı populasyon yenı popusyonun yerıne gectı
         return null;
     };
@@ -75,13 +78,15 @@ function GeneticAlgorithm(props) {
      * -kucukten buyuge sırala
      * -en uygun bıreyı set etasdasd u
      */
+    
     this.create_acumulate_array = function () {
         this.probabilities = [];
         let sum = 0;
         for (let i = 0; i < this.population.length; i++) {
             let current_fit = this.population[i].calcScore();
-            if (current_fit >= this.individual_length**2/2) {
+            if (current_fit >= (this.individual_length**2+this.individual_length**3)/2) {
                 renderInd(this.population[i])
+                console.log(current_fit);
                 alert("buldum");
                 this.best_fit_ind = this.population[i];
                 this.max_score = current_fit;
@@ -96,16 +101,13 @@ function GeneticAlgorithm(props) {
         var list = [];
         for (var j = 0; j < this.probabilities.length; j++)
             list.push({ 'ind': this.population[j], 'prob': this.probabilities[j] });
-
-        list.sort(function (a, b) {
-            return a.prob < b.prob;
-        });
+        list.sort(compare);
         for (var k = 0; k < list.length; k++) {
             this.population[k] = list[k].ind;
             this.probabilities[k] = list[k].prob;
         }
-        this.best_fit_ind = this.population[this.population.length - 1];
-        this.max_score = this.population[this.population.length - 1].calcScore();
+        this.best_fit_ind = this.population[0];
+        this.max_score = this.population[0].calcScore();
         console.log(this.max_score);
         return true;
     }
@@ -125,7 +127,7 @@ function GeneticAlgorithm(props) {
                 return this.population[i];
             }
         }
-        return this.population[this.population.length - 1];
+        return this.population[0];
     };
     /**
      * verilen iki atadan her bir geni yuzde 50 olasılıkla anneden veya babadan alarak
@@ -133,10 +135,38 @@ function GeneticAlgorithm(props) {
      */
     this.reproduce = function (ind1, ind2) {
         let child = new Ind(this.individual_length);
+        //var child = Object.assign({}, ind1);
+        /*child.board = Object.assign({}, ind1.board);
+        let idx = randgen(0, ind1.N-1);
+        child.board[idx] = Object.assign({}, ind2.board[idx]);*/
         for (let i = 0; i < this.individual_length; i++) {
-            child.board[i] = Math.random() > 0.5 ? ind1.board[i] : ind2.board[i];
+            child.board[i] = Math.random() > 0.6 ? [...ind1.board[i]] : [...ind2.board[i]];
         }
         return child;
     };
 
 };
+
+function compare( a, b ) {
+if ( a.prob < b.prob ){
+return 1;
+}
+if ( a.prob > b.prob ){
+return -1;
+}
+return 0;
+}
+
+onmessage = function(msg){
+    let GA = new GeneticAlgorithm(msg.data);
+    GA.create_first_generation();
+    let lastRender = Date.now();
+    let flag;
+    do{
+        flag = GA.create_next_generation();
+        if((Date.now() - lastRender) > 500){
+            postMessage(GA.best_fit_ind);
+            lastRender = Date.now();
+        }
+    }while(!flag);
+}

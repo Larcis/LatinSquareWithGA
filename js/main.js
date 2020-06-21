@@ -1,11 +1,8 @@
 
-function randgen(start, end) {
-    return Math.floor(Math.random() * (end - start)) + start;
-};
 
 
 
-let N = 5;
+let N = 9;
 let cellSize = Math.floor(1200 / N);
 
 var canvas = document.createElement('canvas');
@@ -45,14 +42,33 @@ canvas.onmousedown = (e) => {
 
 }
 
-let GA = new GeneticAlgorithm({
-    mutation_probability: 0.4,
+let props = {
+    mutation_probability: 0.35,
     timeout: 999999,
-    population_size: 100,
+    population_size: 150,
     individual_length: N,
-    keep_alive_rate: 0.1
+    keep_alive_rate: 0.05
+};
+let GAWorker = new Worker('js/geneticAlgorithm.js');
+GAWorker.postMessage(props);
 
-});
+GAWorker.onmessage = function(msg){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    renderInd(msg.data);
+
+}
+
+/*let GA = new GeneticAlgorithm(props);
 GA.create_first_generation();
-while(!GA.create_next_generation());
-    
+
+let lastRender = Date.now();
+let flag;
+do{
+    flag = GA.create_next_generation();
+    if((Date.now() - lastRender) > 200){
+        renderInd(GA.best_fit_ind);
+        lastRender = Date.now();
+        console.log("rendered")
+    }
+}while(!flag);*/
+

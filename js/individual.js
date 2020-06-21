@@ -1,7 +1,6 @@
 class Ind{
     constructor(N=5){
         this.N = N;
-        this.score = 0;
         this.board = [];        
     }
     fillRandom(){
@@ -39,18 +38,22 @@ class Ind{
                     score_dict[elm] = 1;
                 }
             }
-            let k =  Object.keys(score_dict).length;
+            let k =  Object.keys(score_dict).length; // 1 - N
             let sum = 0;
             for (let key in score_dict){
                 let value = score_dict[key];
                 if(value == 1){
-                    sum--;
+                    sum++; //max +N k=N
                 } else {
-                    sum += value;
+                    sum -= value; //min -N  k=1
                 }
             }
-            score -= (this.N / 2 / k * sum);
+            score += (this.N / 2 / k * sum); // -N^3/2  ...  +N^2/2 
         }
-        return score;
+        return this.N**3/2 + score;
     }
 }
+
+function randgen(start, end) {
+    return Math.floor(Math.random() * (end - start)) + start;
+};
