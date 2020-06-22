@@ -21,9 +21,29 @@ class Ind{
         return row;
     }
     mutate(){
-        let nof = randgen(0, this.N / 2);
+        /*let nof = randgen(0, this.N);
         for(let i = 0; i < nof; i++){
             this.board[randgen(0, this.N-1)] = this.getShuffledRow();
+        }*/
+        for(let i=0; i < this.N; i++){
+            let score_dict = {};
+            for(let j=0; j < this.N; j++){
+                let elm = this.board[j][i];
+                if( score_dict[elm] ){
+                    score_dict[elm]++;
+                } else {
+                    score_dict[elm] = 1;
+                }
+            }
+            let k =  Object.keys(score_dict).length; // 1 - N
+            if(k < this.N){
+                for (let key in score_dict){
+                    let value = score_dict[key];
+                    if(value > 1){
+
+                    }
+                }
+            }
         }
     }
     calcScore(){

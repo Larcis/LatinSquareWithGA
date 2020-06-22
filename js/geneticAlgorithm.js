@@ -85,9 +85,8 @@ function GeneticAlgorithm(props) {
         for (let i = 0; i < this.population.length; i++) {
             let current_fit = this.population[i].calcScore();
             if (current_fit >= (this.individual_length**2+this.individual_length**3)/2) {
-                renderInd(this.population[i])
+                postMessage(this.population[i]);
                 console.log(current_fit);
-                alert("buldum");
                 this.best_fit_ind = this.population[i];
                 this.max_score = current_fit;
                 return false;
@@ -108,7 +107,7 @@ function GeneticAlgorithm(props) {
         }
         this.best_fit_ind = this.population[0];
         this.max_score = this.population[0].calcScore();
-        console.log(this.max_score);
+        //console.log(this.max_score);
         return true;
     }
     /**
@@ -140,7 +139,7 @@ function GeneticAlgorithm(props) {
         let idx = randgen(0, ind1.N-1);
         child.board[idx] = Object.assign({}, ind2.board[idx]);*/
         for (let i = 0; i < this.individual_length; i++) {
-            child.board[i] = Math.random() > 0.6 ? [...ind1.board[i]] : [...ind2.board[i]];
+            child.board[i] = Math.random() > 0.7 ? [...ind1.board[i]] : [...ind2.board[i]];
         }
         return child;
     };
@@ -148,25 +147,38 @@ function GeneticAlgorithm(props) {
 };
 
 function compare( a, b ) {
-if ( a.prob < b.prob ){
-return 1;
-}
-if ( a.prob > b.prob ){
-return -1;
-}
-return 0;
+    if ( a.prob < b.prob ){
+        return 1;
+    }
+    if ( a.prob > b.prob ){
+        return -1;
+    }
+    return 0;
 }
 
+let state = "free";
+let flag;
+
 onmessage = function(msg){
-    let GA = new GeneticAlgorithm(msg.data);
-    GA.create_first_generation();
-    let lastRender = Date.now();
-    let flag;
-    do{
-        flag = GA.create_next_generation();
-        if((Date.now() - lastRender) > 500){
-            postMessage(GA.best_fit_ind);
-            lastRender = Date.now();
-        }
-    }while(!flag);
+    if(state == "free"){
+        state = "solve";
+        let GA = new GeneticAlgorithm(msg.data);
+        GA.create_first_generation();
+        let lastRender = Date.now();
+        let lastMax;
+        do{
+            flag = GA.create_next_generation();
+            if(lastMax != GA.max_score && (Date.now() - lastRender) > 50){
+                postMessage(GA.best_fit_ind);
+                lastRender = Date.now();
+                lastMax = GA.max_score;
+                console.log(lastMax);
+            }
+        }while(!flag);
+        console.log("end end end");
+    } else {
+        flag = true;
+        state = "free";
+    }
+    
 }

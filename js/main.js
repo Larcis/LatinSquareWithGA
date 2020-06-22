@@ -1,40 +1,26 @@
 
-
-
-
-let N = 9;
-let cellSize = Math.floor(1200 / N);
+var N = 6;
+var canvas_size = 3200;
+var cellSize = Math.floor(canvas_size / N);
 
 var canvas = document.createElement('canvas');
 canvas.id = "MainBoard";
-canvas.width = 1200;
-canvas.height = 1200;
+canvas.width = canvas_size;
+canvas.height = canvas_size;
 
-document.body.appendChild(canvas);
+document.getElementById("canvasContainer").appendChild(canvas);
 
 var ctx = canvas.getContext("2d");
-
 ctx.font = `${cellSize/2}px Arial`;
 ctx.textAlign = "center";
 ctx.textBaseline = 'middle';
-ctx.fillStyle = "green";
 
-function renderInd(elem){
-    for(let i=0; i < elem.N; i++){
-        for(let j=0; j < elem.N; j++){
-            if(ctx){
-                ctx.fillText(elem.board[i][j], (j+1/2) * cellSize, (i+1/2) * cellSize);
 
-            } else {
-                console.log(elem.board[i][j]);
-            }
-        }
-    }
-}
+
 
 canvas.onmousedown = (e) => {
-    let x = Math.floor(e.pageX / canvas.offsetWidth * canvas.width);
-    let y =  Math.floor(e.pageY / canvas.offsetHeight * canvas.height);
+    var x = Math.floor(e.pageX / canvas.offsetWidth * canvas.width);
+    var y =  Math.floor(e.pageY / canvas.offsetHeight * canvas.height);
     console.log(x, y)
 
     ctx.fillStyle = "red";
@@ -42,27 +28,43 @@ canvas.onmousedown = (e) => {
 
 }
 
-let props = {
-    mutation_probability: 0.35,
+var props = {
+    mutation_probability: 0.3,
     timeout: 999999,
-    population_size: 150,
+    population_size: 500,
     individual_length: N,
-    keep_alive_rate: 0.05
+    keep_alive_rate: 0.1
 };
-let GAWorker = new Worker('js/geneticAlgorithm.js');
+
+var GAWorker = new Worker('js/geneticAlgorithm.js');
 GAWorker.postMessage(props);
 
+var lastInd;
 GAWorker.onmessage = function(msg){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    renderInd(msg.data);
+    render(msg.data, current_render_mode);
+    if(lastInd){
+        for(var i=0; i < N; i++){
+            for(var j=1; j<N; j++){
+                if(msg.data.board[i][j] != lastInd.board[i][j]){
+                    ctx.strokeStyle = "aqua";
+                    ctx.lineWidth = "16";
+
+                    ctx.beginPath();
+                    ctx.rect(j * cellSize, i * cellSize, cellSize, cellSize);
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+    lastInd = msg.data; 
 
 }
-
-/*let GA = new GeneticAlgorithm(props);
+/*var GA = new GeneticAlgorithm(props);
 GA.create_first_generation();
 
-let lastRender = Date.now();
-let flag;
+var lastRender = Date.now();
+var flag;
 do{
     flag = GA.create_next_generation();
     if((Date.now() - lastRender) > 200){
@@ -70,5 +72,8 @@ do{
         lastRender = Date.now();
         console.log("rendered")
     }
-}while(!flag);*/
+}while(!flag);
+var i = new Ind(N);
+i.fillRandom();
+renderInd(i);*/
 

@@ -6,11 +6,63 @@
     <title>Latin Square</title>
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel='icon' href='favicon.ico'/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
 </head>
 <body>
+    <div id='container'>
+        <div id="canvasContainer">
+        </div>
+        <div id="ui">
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Board Size</span>
+                </div>
+                <input id="board_size" value="4" type="number" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Mutation Prob.</span>
+                </div>
+                <input id="mut_prob" value="0.3" type="number" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Timeout</span>
+                </div>
+                <input id="timeout" value="999999" type="number" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Population Size</span>
+                </div>
+                <input id="pop_size" value="50" type="number" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Keep Alive Rate</span>
+                </div>
+                <input id="kar" value="0.1" type="number" class="form-control">
+            </div>
+
+            
+              <div class="input-group mb-3">
+                <select class="form-control" id="render_type" onchange="onRenderChoiceChange(this.value)">
+                    <option>Renk-Sayı</option>
+                    <option>Sayı</option>
+                    <option>Renk</option>
+                    <option>Harf</option>
+                    <option>Renk-Harf</option>
+                  </select>
+            </div>
+              <button type="button" class="btn btn-primary btn-block">Start</button>
+
+        </div>
+    </div>
     <script src="js/individual.js"></script>
-    <script src="js/geneticAlgorithm.js"></script>
+
+    <script src="js/renderStuff.js"></script>
     <script src="js/main.js"></script>
 
 </body>
