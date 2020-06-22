@@ -73,10 +73,12 @@ function GeneticAlgorithm(props) {
         for (let i = 0; i < this.population.length; i++) {
             let current_fit = this.population[i].calcScore();
             if (current_fit >= (this.individual_length**2+this.individual_length**3)/2) {
-                postMessage(this.population[i]);
+                postMessage({ind: this.population[i], score: current_fit});
+                //postMessage(this.population[i]);
                 console.log(current_fit);
                 this.best_fit_ind = this.population[i];
                 this.max_score = current_fit;
+                postMessage({"finish": true});
                 return false;
             }
             this.probabilities.push(current_fit);
@@ -148,7 +150,8 @@ let state = "free";
 let flag;
 
 onmessage = function(msg){
-    if(state == "free"){
+    console.log(msg.data)
+    if(state == "free" && msg.data?.mutation_probability){
         state = "solve";
         let GA = new GeneticAlgorithm(msg.data);
         GA.create_first_generation();
@@ -157,16 +160,19 @@ onmessage = function(msg){
         do{
             flag = GA.create_next_generation();
             if(lastMax != GA.max_score && (Date.now() - lastRender) > 50){
-                postMessage(GA.best_fit_ind);
                 lastRender = Date.now();
                 lastMax = GA.max_score;
+                postMessage({ind: GA.best_fit_ind, score: lastMax});
                 console.log(lastMax);
             }
         }while(!flag);
         console.log("end end end");
+        state = "free";
     } else {
         flag = true;
         state = "free";
+        postMessage({"finish": true});
+
     }
     
 }
