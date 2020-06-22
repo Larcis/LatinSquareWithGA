@@ -51,18 +51,6 @@ function GeneticAlgorithm(props) {
             if (Math.random() < this.mutation_probability) { //cocuk mutasyona ugrasın mı? mutation_probability olasılıgıyla
                 child.mutate();
             }
-            //natural selection şart yoksa algoritma ilerlemiyor.
-            //cocuk, anne veya babadan en ıyı fıtnessa sahıp olanı yenı nesıle ekle
-            /*let fx = x.calcScore();
-            let fy = y.calcScore();
-            let fc = child.calcScore();
-            if (fc >= fx && fc >= fy) {
-                new_population.push(child);
-            } else if (fx > fy) {
-                new_population.push(x);
-            } else {
-                new_population.push(y);
-            }*/
             new_population.push(child);
         }
         //console.assert(this.population.length === new_population.length, { error: "population size changed" });
@@ -139,7 +127,7 @@ function GeneticAlgorithm(props) {
         let idx = randgen(0, ind1.N-1);
         child.board[idx] = Object.assign({}, ind2.board[idx]);*/
         for (let i = 0; i < this.individual_length; i++) {
-            child.board[i] = Math.random() > 0.7 ? [...ind1.board[i]] : [...ind2.board[i]];
+            child.board[i] = Math.random() > 0.6 ? [...ind1.board[i]] : [...ind2.board[i]];
         }
         return child;
     };

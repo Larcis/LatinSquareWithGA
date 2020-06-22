@@ -37,17 +37,20 @@ function renderAlph(board, n){
         }
     }
 }
+
+var colors = [];
+for(var i =0; i < 150; i++){
+    let c;
+    do{
+        c = getRandomColor();
+    }while(colors.includes(c));
+    colors.push(c);
+}
 function renderColor(board, n){
-    var colors = [];
-    for(var i =0; i < n; i++){
-        colors.push(getRandomColor());
-    }
     for(var i=0; i < n; i++){
         for(var j=0; j < n; j++){
             ctx.fillStyle = colors[board[i][j]];
-            //ctx.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
-            ctx.roundRect(j * cellSize, i * cellSize, cellSize, cellSize, cellSize/4).fill(); //or .fill() for a filled rect
-
+            ctx.roundRect(j * cellSize, i * cellSize, cellSize, cellSize, cellSize/4).fill();
         }
     }
 }

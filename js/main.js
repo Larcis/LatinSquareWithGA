@@ -1,5 +1,5 @@
 
-var N = 6;
+var N = 8;
 var canvas_size = 3200;
 var cellSize = Math.floor(canvas_size / N);
 
@@ -29,7 +29,7 @@ canvas.onmousedown = (e) => {
 }
 
 var props = {
-    mutation_probability: 0.3,
+    mutation_probability: 0.6,
     timeout: 999999,
     population_size: 500,
     individual_length: N,
