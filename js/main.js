@@ -31,7 +31,6 @@ canvas.onmousemove = (e) => {
     if(draw){
         var x = Math.floor(e.pageX / canvas.offsetWidth * canvas.width);
         var y = Math.floor(e.pageY / canvas.offsetHeight * canvas.height);
-        //console.log(x, y)
         ctx.strokeStyle = "yellow";
         ctx.lineWidth = 4;
         ctx.beginPath();
@@ -42,14 +41,6 @@ canvas.onmousemove = (e) => {
         y_old = y;
     }
 }
-
-/*var props = {
-    mutation_probability: 0.4,
-    timeout: 999999,
-    population_size: 1000,
-    individual_length: N,
-    keep_alive_rate: 0.1
-};*/
 
 var GAWorker = new Worker('js/geneticAlgorithm.js');
 
@@ -139,20 +130,4 @@ function startOnClick(){
   
 
 }
-/*var GA = new GeneticAlgorithm(props);
-GA.create_first_generation();
-
-var lastRender = Date.now();
-var flag;
-do{
-    flag = GA.create_next_generation();
-    if((Date.now() - lastRender) > 200){
-        renderInd(GA.best_fit_ind);
-        lastRender = Date.now();
-        console.log("rendered")
-    }
-}while(!flag);
-var i = new Ind(N);
-i.fillRandom();
-renderInd(i);*/
-
+startOnClick();

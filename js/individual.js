@@ -21,10 +21,6 @@ class Ind{
         return row;
     }
     mutate(){
-        /*let nof = randgen(0, this.N);
-        for(let i = 0; i < nof; i++){
-            this.board[randgen(0, this.N-1)] = this.getShuffledRow();
-        }*/
         let idxs = [];
         for(let i=0; i < this.N; i++){
             let score_dict = {};
@@ -38,8 +34,6 @@ class Ind{
                 }
             }
         }
-        //console.log(idxs)
-
         for(let i = 0; i < idxs.length; i++){
             this.board[idxs[i]] = this.getShuffledRow();
         }
