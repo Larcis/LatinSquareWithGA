@@ -29,9 +29,13 @@ canvas {
     height: 50%;
     margin-top: 3%;
     float: right;
-    overflow-y: hidden;
+    overflow-y: scroll;
     opacity: 1.;
     margin-right: 3%;
+    background-color: rgba(255, 255, 255,0.1);
+    border: 4px solid;
+    border-color: rgba(255, 0, 0,0.3);
+    border-radius: 8px;
 }
 #ui2{
     width:25%;
@@ -42,6 +46,10 @@ canvas {
     opacity: 1.;
     margin-right: 3%;
     margin-top: 3%;
+    background-color: rgba(255, 255, 255,0.1);
+    border: 4px solid;
+    border-color: rgba(255, 0, 0,0.3);
+    border-radius: 8px;
 }
 
 #container{
@@ -52,3 +60,25 @@ canvas {
     margin: 0;
     padding: 0;
 }
+
+/* width */
+::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(50, 110, 1);
+    border-radius: 6px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #F00;
+  }

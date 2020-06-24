@@ -17,15 +17,30 @@ ctx.textBaseline = 'middle';
 
 
 
-
+let draw=false;
+let x_old, y_old;
+canvas.onmouseup = (e) => {
+    draw = false;
+}
 canvas.onmousedown = (e) => {
-    var x = Math.floor(e.pageX / canvas.offsetWidth * canvas.width);
-    var y =  Math.floor(e.pageY / canvas.offsetHeight * canvas.height);
-    console.log(x, y)
-
-    ctx.fillStyle = "red";
-    ctx.fillRect(x, y, 20, 20);
-
+    draw = true;
+    x_old = Math.floor(e.pageX / canvas.offsetWidth * canvas.width);
+    y_old = Math.floor(e.pageY / canvas.offsetHeight * canvas.height);
+}
+canvas.onmousemove = (e) => {
+    if(draw){
+        var x = Math.floor(e.pageX / canvas.offsetWidth * canvas.width);
+        var y = Math.floor(e.pageY / canvas.offsetHeight * canvas.height);
+        //console.log(x, y)
+        ctx.strokeStyle = "yellow";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(x_old, y_old);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        x_old = x;
+        y_old = y;
+    }
 }
 
 /*var props = {
@@ -40,7 +55,11 @@ var GAWorker = new Worker('js/geneticAlgorithm.js');
 
 var lastInd;
 let ui2 = document.getElementById("ui2");
+let show_change_cb;
 
+function checkboxChanged(val){
+    show_change_cb = val;
+}
 GAWorker.onmessage = function(msg){
     if(msg.data?.finish){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -50,17 +69,26 @@ GAWorker.onmessage = function(msg){
     } else {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         render(msg.data.ind, current_render_mode);
-        var h = document.createElement("H4")                
+        var h = document.createElement("H5")                
         var t = document.createTextNode(`Curren Max Score: (required=${(N**2+N**3)/2}) ` + msg.data.score);
         h.style.color = "white"; 
         h.appendChild(t);                           
         ui2.appendChild(h);
-        if(lastInd && lastInd.board.length == msg.data.ind.board.length){
+        if(msg.data?.start_time){
+            let tstr = (Date.now() - msg.data.start_time) +" ms"
+            console.log(tstr);
+            var h = document.createElement("H3")                
+            var t = document.createTextNode(`Total Time: ` + tstr);
+            h.style.color = "red"; 
+            h.appendChild(t);                           
+            ui2.appendChild(h);
+        }
+        if(show_change_cb && lastInd && lastInd.board.length == msg.data.ind.board.length){
             for(var i=0; i < N; i++){
                 for(var j=1; j<N; j++){
                     if(msg.data.ind.board[i][j] != lastInd.board[i][j]){
                         ctx.strokeStyle = "aqua";
-                        ctx.lineWidth = "16";
+                        ctx.lineWidth = "12";
     
                         ctx.beginPath();
                         ctx.rect(j * cellSize, i * cellSize, cellSize, cellSize);
@@ -96,6 +124,7 @@ function startOnClick(){
         ui2.innerHTML = "";
         N = parseInt(document.getElementById("board_size").value);
         cellSize = Math.floor(canvas_size / N);
+        ctx.font = `${cellSize/2}px Arial`;
         var props = {
             mutation_probability: parseFloat(document.getElementById("mut_prob").value),
             timeout:  parseInt(document.getElementById("timeout").value),

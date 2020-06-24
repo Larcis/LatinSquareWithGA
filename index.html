@@ -14,7 +14,16 @@
         <div id="canvasContainer">
         </div>
         <div id="ui">
-
+          
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <input type="checkbox" id="show_change_cb" onchange="checkboxChanged(this.checked)">
+                  </div>
+                </div>
+                <input type="text" value="Show Change" class="form-control" disabled="true" aria-label="Text input with checkbox">
+              </div>
+            
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Board Size</span>
